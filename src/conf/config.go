@@ -9,8 +9,8 @@ import (
 	"gorm.io/gorm"
 )
 
-// ConectDB connects go to the database
-func ConectDB() *gorm.DB {
+// ConnectDB connects go to the database
+func ConnectDB() *gorm.DB {
 	errorENV := godotenv.Load()
 	if errorENV != nil {
 		panic("Failed to load env file!")

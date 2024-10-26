@@ -3,7 +3,7 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/Vlad-Peresta/todo_list_go/src/config"
+	"github.com/Vlad-Peresta/todo_list_go/src/conf"
 	"github.com/Vlad-Peresta/todo_list_go/src/models"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -44,7 +44,11 @@ func CreateTodo(context *gin.Context) {
 	}
 
 	// Matching result to create Response
-	response := todoResponse{ID: todo.ID, Name: todo.Name, Description: todo.Description}
+	// response := todoResponse{ID: todo.ID, Name: todo.Name, Description: todo.Description}
+	var response todoResponse
+	response.ID = todo.ID
+	response.Name = todo.Name
+	response.Description = todo.Description
 
 	// Creating Http response
 	context.JSON(http.StatusCreated, response)
