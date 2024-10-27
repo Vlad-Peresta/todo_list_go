@@ -53,3 +53,23 @@ func CreateTodo(context *gin.Context) {
 	// Creating Http response
 	context.JSON(http.StatusCreated, response)
 }
+
+// Getting all todo data
+func GetAllTodos(context *gin.Context) {
+	var todos []models.Todo
+
+	// Query to find all todos
+	err := db.Find(&todos)
+	if err.Error != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": "Error getting data"})
+		return
+	}
+
+	// Creating Http response
+	context.JSON(
+		http.StatusOK, gin.H{
+			"status":  "200",
+			"message": "Success",
+			"data":    todos,
+		})
+}
