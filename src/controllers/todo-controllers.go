@@ -3,7 +3,7 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/Vlad-Peresta/todo_list_go/src/conf"
+	config "github.com/Vlad-Peresta/todo_list_go/src/conf"
 	"github.com/Vlad-Peresta/todo_list_go/src/models"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -12,29 +12,29 @@ import (
 // Define database client
 var db *gorm.DB = config.ConnectDB()
 
-// Todo struct to the request body
+// Todo struct for the request HTTP body
 type todoRequest struct {
 	Name        string `json:"name"`
 	Description string `json:"desctiption"`
 }
 
-// Todo struct for response
+// Todo struct for the HTTP response
 type todoResponse struct {
 	todoRequest
 	ID uint `json:"id"`
 }
 
-// Create todo data to database by run this function
+// Create Todo record in database
 func CreateTodo(context *gin.Context) {
 	var data todoRequest
 
-	// Binding json request body  with with todoRequest struct
+	// Binding JSON request body to todoRequest struct
 	if err := context.ShouldBindJSON(&data); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	// Matching todo models struct with todo request struct
+	// Matching Todo models struct to todoRequest struct
 	todo := models.Todo{Name: data.Name, Description: data.Description}
 
 	// Query to database
@@ -43,18 +43,18 @@ func CreateTodo(context *gin.Context) {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err})
 	}
 
-	// Matching result to create Response
+	// Matching result to create HTTP Response
 	// response := todoResponse{ID: todo.ID, Name: todo.Name, Description: todo.Description}
 	var response todoResponse
 	response.ID = todo.ID
 	response.Name = todo.Name
 	response.Description = todo.Description
 
-	// Creating Http response
+	// Create HTTP response
 	context.JSON(http.StatusCreated, response)
 }
 
-// Getting all todo data
+// Getting all Todo data
 func GetAllTodos(context *gin.Context) {
 	var todos []models.Todo
 
@@ -65,7 +65,7 @@ func GetAllTodos(context *gin.Context) {
 		return
 	}
 
-	// Creating Http response
+	// Creating HTTP response
 	context.JSON(
 		http.StatusOK, gin.H{
 			"status":  "200",

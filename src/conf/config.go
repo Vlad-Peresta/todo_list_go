@@ -34,7 +34,7 @@ func ConnectDB() *gorm.DB {
 	return db
 }
 
-// DisconnectDB is stopping your connection to mysql database
+// DisconnectDB is stopping connection to Postgres database
 func DisconnectDB(db *gorm.DB) {
 	dbSQL, err := db.DB()
 	if err != nil {
