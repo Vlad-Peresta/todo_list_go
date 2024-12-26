@@ -14,14 +14,14 @@ var db *gorm.DB = config.ConnectDB()
 
 // Todo struct for the request HTTP body
 type todoRequest struct {
-	Name        string `json:"name"`
-	Description string `json:"desctiption"`
+	Name        string `json:"Name"`
+	Description string `json:"Description"`
 }
 
 // Todo struct for the HTTP response
 type todoResponse struct {
 	todoRequest
-	ID uint `json:"id"`
+	ID uint `json:"ID"`
 }
 
 // Create Todo record in database
