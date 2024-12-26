@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/Vlad-Peresta/todo_list_go/src/models"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"github.com/Vlad-Peresta/todo_list_go/src/models"
 )
 
 // ConnectDB connects go to the database
@@ -29,7 +29,10 @@ func ConnectDB() *gorm.DB {
 	if errorDB != nil {
 		panic("Failed to connect Postgres database")
 	}
-	db.AutoMigrate(&models.Todo{})
+
+	if err := db.AutoMigrate(&models.Todo{}); err != nil {
+		fmt.Printf("Failed to migrate: %v", err)
+	}
 
 	return db
 }

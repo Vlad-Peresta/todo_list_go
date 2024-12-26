@@ -115,6 +115,6 @@ func UpdateTodo(context *gin.Context) {
 	response.Name = todo.Name
 	response.Description = todo.Description
 
-  // Creating HTTP response
+	// Creating HTTP response
 	context.JSON(http.StatusCreated, response)
 }

@@ -1,6 +1,8 @@
 package routes
 
 import (
+	"fmt"
+
 	"github.com/Vlad-Peresta/todo_list_go/src/controllers"
 	"github.com/gin-gonic/gin"
 )
@@ -15,5 +17,8 @@ func Routes() {
 	// route.DELETE("todo/:idTodo", controllers.DeleteTodo)
 
 	// Run route whenever triggered
-	route.Run()
+	if err := route.Run(); err != nil {
+		fmt.Printf("Failed to start the server: %s", err)
+		return
+	}
 }
