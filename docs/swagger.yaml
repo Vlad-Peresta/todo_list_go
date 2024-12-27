@@ -1,0 +1,138 @@
+basePath: /api/v1
+definitions:
+  controllers.todoRequest:
+    properties:
+      Description:
+        type: string
+      Name:
+        type: string
+    type: object
+  gorm.DeletedAt:
+    properties:
+      time:
+        type: string
+      valid:
+        description: Valid is true if Time is not NULL
+        type: boolean
+    type: object
+  models.Todo:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: perestavlad@gmail.com
+    name: Vladyslav Peresta
+    url: https://github.com/Vlad-Peresta
+  description: API for working with the Todo List.
+  title: Todo List API
+  version: 1.0.0
+paths:
+  /todos:
+    get:
+      description: Get all Todo records
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Todo'
+            type: array
+        "400":
+          description: Bad Request
+          schema: {}
+      summary: Get all Todo records
+      tags:
+      - todos
+    post:
+      description: Create Todo record
+      parameters:
+      - description: Request Body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.todoRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Todo'
+            type: array
+        "400":
+          description: Bad Request
+          schema: {}
+      summary: Create Todo record
+      tags:
+      - todos
+  /todos/{id}:
+    delete:
+      description: Delete Todo record
+      parameters:
+      - description: Todo ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Todo'
+            type: array
+        "400":
+          description: Bad Request
+          schema: {}
+      summary: Delete Todo record
+      tags:
+      - todos
+    put:
+      description: Update Todo record
+      parameters:
+      - description: Todo ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Request Body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.todoRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Todo'
+            type: array
+        "400":
+          description: Bad Request
+          schema: {}
+      summary: Update Todo record
+      tags:
+      - todos
+swagger: "2.0"

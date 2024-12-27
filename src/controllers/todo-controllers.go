@@ -25,6 +25,17 @@ type todoResponse struct {
 	ID uint `json:"ID"`
 }
 
+// CreateTodo godoc
+//
+//	@Summary		Create Todo record
+//	@Description	Create Todo record
+//	@Tags			todos
+//	@Produce		json
+//	@Param			Request Body 	body		controllers.todoRequest  	true	"Request Body"
+//	@Success		200	{object}	[]models.Todo
+//	@Failure		400	{object}	error
+//	@Router			/todos [POST]
+//
 // Create Todo record in database
 func CreateTodo(context *gin.Context) {
 	var data todoRequest
@@ -55,6 +66,16 @@ func CreateTodo(context *gin.Context) {
 	context.JSON(http.StatusCreated, response)
 }
 
+// GetAllTodos godoc
+//
+//	@Summary		Get all Todo records
+//	@Description	Get all Todo records
+//	@Tags			todos
+//	@Produce		json
+//	@Success		200	{object}	[]models.Todo
+//	@Failure		400	{object}	error
+//	@Router			/todos [GET]
+//
 // Getting all Todo data
 func GetAllTodos(context *gin.Context) {
 	var todos []models.Todo
@@ -75,6 +96,18 @@ func GetAllTodos(context *gin.Context) {
 		})
 }
 
+// UpdateTodo godoc
+//
+//	@Summary		Update Todo record
+//	@Description	Update Todo record
+//	@Tags			todos
+//	@Produce		json
+//	@Param			id	path		int	true	"Todo ID"
+//	@Param			Request Body 	body		controllers.todoRequest  	true	"Request Body"
+//	@Success		200	{object}	[]models.Todo
+//	@Failure		400	{object}	error
+//	@Router			/todos/{id} [PUT]
+//
 // Update Todo record by ID
 func UpdateTodo(context *gin.Context) {
 	var data todoRequest
@@ -120,6 +153,17 @@ func UpdateTodo(context *gin.Context) {
 	context.JSON(http.StatusCreated, response)
 }
 
+// DeleteTodo godoc
+//
+//	@Summary		Delete Todo record
+//	@Description	Delete Todo record
+//	@Tags			todos
+//	@Produce		json
+//	@Param			id	path		int	true	"Todo ID"
+//	@Success		200	{object}	[]models.Todo
+//	@Failure		400	{object}	error
+//	@Router			/todos/{id} [DELETE]
+//
 // Delete Todo record by ID
 func DeleteTodo(context *gin.Context) {
 	// Initiate empty Todo model's record

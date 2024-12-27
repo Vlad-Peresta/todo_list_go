@@ -3,18 +3,29 @@ package routes
 import (
 	"fmt"
 
+	docs "github.com/Vlad-Peresta/todo_list_go/docs"
 	"github.com/Vlad-Peresta/todo_list_go/src/controllers"
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 // Routes function to serve endpoints
 func Routes() {
 	route := gin.Default()
+	docs.SwaggerInfo.BasePath = "/api/v1"
 
-	route.POST("/todo", controllers.CreateTodo)
-	route.GET("/todo", controllers.GetAllTodos)
-	route.PUT("/todo/:id", controllers.UpdateTodo)
-	route.DELETE("todo/:id", controllers.DeleteTodo)
+	v1 := route.Group("/api/v1")
+	{
+		todos := v1.Group("/todos")
+		{
+			todos.POST("", controllers.CreateTodo)
+			todos.GET("", controllers.GetAllTodos)
+			todos.PUT(":id", controllers.UpdateTodo)
+			todos.DELETE(":id", controllers.DeleteTodo)
+		}
+	}
+	route.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Run route whenever triggered
 	if err := route.Run(); err != nil {
