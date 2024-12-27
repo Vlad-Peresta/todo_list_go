@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"log"
 	"net/http"
 
 	config "github.com/Vlad-Peresta/todo_list_go/src/conf"
@@ -75,6 +76,7 @@ func GetAllTodos(context *gin.Context) {
 		})
 }
 
+// Update Todo record by ID
 func UpdateTodo(context *gin.Context) {
 	var data todoRequest
 
@@ -117,4 +119,25 @@ func UpdateTodo(context *gin.Context) {
 
 	// Creating HTTP response
 	context.JSON(http.StatusCreated, response)
+}
+
+// Delete Todo record by ID
+func DeleteTodo(context *gin.Context) {
+	// Initiate empty Todo model's record
+	todo := models.Todo{}
+
+	// Defining HTTP request parameter to get Todo id
+	reqId := context.Param("id")
+	todoId := cast.ToUint(reqId)
+
+	// Delete Todo record by id from DB
+	deletedTodo := db.Where("id = ?", todoId).Unscoped().Delete(&todo)
+	log.Println(deletedTodo)
+
+	// Creating HTTP response
+	context.JSON(http.StatusOK, gin.H{
+		"status":  "200",
+		"message": "Record was deleted successfully",
+		"data":    todoId,
+	})
 }

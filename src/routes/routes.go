@@ -14,7 +14,7 @@ func Routes() {
 	route.POST("/todo", controllers.CreateTodo)
 	route.GET("/todo", controllers.GetAllTodos)
 	route.PUT("/todo/:id", controllers.UpdateTodo)
-	// route.DELETE("todo/:idTodo", controllers.DeleteTodo)
+	route.DELETE("todo/:id", controllers.DeleteTodo)
 
 	// Run route whenever triggered
 	if err := route.Run(); err != nil {
