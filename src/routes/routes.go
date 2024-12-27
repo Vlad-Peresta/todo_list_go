@@ -21,6 +21,7 @@ func Routes() {
 		{
 			todos.POST("", controllers.CreateTodo)
 			todos.GET("", controllers.GetAllTodos)
+			todos.GET(":id", controllers.GetTodo)
 			todos.PUT(":id", controllers.UpdateTodo)
 			todos.DELETE(":id", controllers.DeleteTodo)
 		}

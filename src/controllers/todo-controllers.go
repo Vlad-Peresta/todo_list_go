@@ -32,7 +32,7 @@ type todoResponse struct {
 //	@Tags			todos
 //	@Produce		json
 //	@Param			Request Body 	body		controllers.todoRequest  	true	"Request Body"
-//	@Success		200	{object}	[]models.Todo
+//	@Success		200	{object}	controllers.todoResponse
 //	@Failure		400	{object}	error
 //	@Router			/todos [POST]
 //
@@ -83,7 +83,8 @@ func GetAllTodos(context *gin.Context) {
 	// Query to find all todos
 	err := db.Find(&todos)
 	if err.Error != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "Error getting data"})
+		context.JSON(http.StatusBadRequest, gin.H{
+			"error": "Error getting data"})
 		return
 	}
 
@@ -96,6 +97,42 @@ func GetAllTodos(context *gin.Context) {
 		})
 }
 
+// GetTodo godoc
+//
+//	@Summary		Get Todo record by ID
+//	@Description	Get Todo record by ID
+//	@Tags			todos
+//	@Produce		json
+//	@Param			id	path		int	true	"Todo ID"
+//	@Success		200	{object}	controllers.todoResponse
+//	@Failure		400	{object}	error
+//	@Router			/todos/{id} [GET]
+//
+// Getting Todo record by ID
+func GetTodo(context *gin.Context) {
+	var todo models.Todo
+
+	// Get Todo id from HTTP request parameter
+	todoId := cast.ToUint(context.Param("id"))
+
+	// Query to find todo
+	err := db.First(&todo, todoId)
+	if err.Error != nil {
+		context.JSON(http.StatusBadRequest, gin.H{
+			"error": "Record with provided ID does not exit"})
+		return
+	}
+
+	// Matching result to todoResponse
+	var response todoResponse
+	response.ID = todo.ID
+	response.Name = todo.Name
+	response.Description = todo.Description
+
+	// Creating HTTP response
+	context.JSON(http.StatusCreated, response)
+}
+
 // UpdateTodo godoc
 //
 //	@Summary		Update Todo record
@@ -104,7 +141,7 @@ func GetAllTodos(context *gin.Context) {
 //	@Produce		json
 //	@Param			id	path		int	true	"Todo ID"
 //	@Param			Request Body 	body		controllers.todoRequest  	true	"Request Body"
-//	@Success		200	{object}	[]models.Todo
+//	@Success		200	{object}	controllers.todoResponse
 //	@Failure		400	{object}	error
 //	@Router			/todos/{id} [PUT]
 //

@@ -7,6 +7,15 @@ definitions:
       Name:
         type: string
     type: object
+  controllers.todoResponse:
+    properties:
+      Description:
+        type: string
+      ID:
+        type: integer
+      Name:
+        type: string
+    type: object
   gorm.DeletedAt:
     properties:
       time:
@@ -73,9 +82,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/models.Todo'
-            type: array
+            $ref: '#/definitions/controllers.todoResponse'
         "400":
           description: Bad Request
           schema: {}
@@ -106,6 +113,27 @@ paths:
       summary: Delete Todo record
       tags:
       - todos
+    get:
+      description: Get Todo record by ID
+      parameters:
+      - description: Todo ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.todoResponse'
+        "400":
+          description: Bad Request
+          schema: {}
+      summary: Get Todo record by ID
+      tags:
+      - todos
     put:
       description: Update Todo record
       parameters:
@@ -126,9 +154,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/models.Todo'
-            type: array
+            $ref: '#/definitions/controllers.todoResponse'
         "400":
           description: Bad Request
           schema: {}

@@ -69,10 +69,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.Todo"
-                            }
+                            "$ref": "#/definitions/controllers.todoResponse"
                         }
                     },
                     "400": {
@@ -83,6 +80,37 @@ const docTemplate = `{
             }
         },
         "/todos/{id}": {
+            "get": {
+                "description": "Get Todo record by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "todos"
+                ],
+                "summary": "Get Todo record by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Todo ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.todoResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {}
+                    }
+                }
+            },
             "put": {
                 "description": "Update Todo record",
                 "produces": [
@@ -114,10 +142,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.Todo"
-                            }
+                            "$ref": "#/definitions/controllers.todoResponse"
                         }
                     },
                     "400": {
@@ -168,6 +193,20 @@ const docTemplate = `{
             "properties": {
                 "Description": {
                     "type": "string"
+                },
+                "Name": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.todoResponse": {
+            "type": "object",
+            "properties": {
+                "Description": {
+                    "type": "string"
+                },
+                "ID": {
+                    "type": "integer"
                 },
                 "Name": {
                     "type": "string"
