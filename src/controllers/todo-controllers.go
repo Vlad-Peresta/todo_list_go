@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"log"
 	"net/http"
 
 	config "github.com/Vlad-Peresta/todo_list_go/src/conf"
@@ -131,8 +130,7 @@ func DeleteTodo(context *gin.Context) {
 	todoId := cast.ToUint(reqId)
 
 	// Delete Todo record by id from DB
-	deletedTodo := db.Where("id = ?", todoId).Unscoped().Delete(&todo)
-	log.Println(deletedTodo)
+	db.Where("id = ?", todoId).Unscoped().Delete(&todo)
 
 	// Creating HTTP response
 	context.JSON(http.StatusOK, gin.H{
