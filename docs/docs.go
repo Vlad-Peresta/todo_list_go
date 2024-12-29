@@ -61,7 +61,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.todoRequest"
+                            "$ref": "#/definitions/schemas.TodoRequest"
                         }
                     }
                 ],
@@ -69,7 +69,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controllers.todoResponse"
+                            "$ref": "#/definitions/schemas.TodoResponse"
                         }
                     },
                     "400": {
@@ -102,7 +102,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controllers.todoResponse"
+                            "$ref": "#/definitions/schemas.TodoResponse"
                         }
                     },
                     "400": {
@@ -134,7 +134,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.todoRequest"
+                            "$ref": "#/definitions/schemas.TodoRequest"
                         }
                     }
                 ],
@@ -142,7 +142,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controllers.todoResponse"
+                            "$ref": "#/definitions/schemas.TodoResponse"
                         }
                     },
                     "400": {
@@ -188,31 +188,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "controllers.todoRequest": {
-            "type": "object",
-            "properties": {
-                "Description": {
-                    "type": "string"
-                },
-                "Name": {
-                    "type": "string"
-                }
-            }
-        },
-        "controllers.todoResponse": {
-            "type": "object",
-            "properties": {
-                "Description": {
-                    "type": "string"
-                },
-                "ID": {
-                    "type": "integer"
-                },
-                "Name": {
-                    "type": "string"
-                }
-            }
-        },
         "gorm.DeletedAt": {
             "type": "object",
             "properties": {
@@ -225,10 +200,42 @@ const docTemplate = `{
                 }
             }
         },
-        "models.Todo": {
+        "models.Tag": {
             "type": "object",
             "properties": {
                 "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "todos": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Todo"
+                    }
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Todo": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "deadline": {
                     "type": "string"
                 },
                 "deletedAt": {
@@ -243,7 +250,41 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
+                "statusID": {
+                    "type": "integer"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Tag"
+                    }
+                },
                 "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "schemas.TodoRequest": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "schemas.TodoResponse": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
                     "type": "string"
                 }
             }

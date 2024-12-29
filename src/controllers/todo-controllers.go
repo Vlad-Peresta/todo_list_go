@@ -5,6 +5,7 @@ import (
 
 	config "github.com/Vlad-Peresta/todo_list_go/src/conf"
 	"github.com/Vlad-Peresta/todo_list_go/src/models"
+	"github.com/Vlad-Peresta/todo_list_go/src/schemas"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cast"
 	"gorm.io/gorm"
@@ -13,32 +14,20 @@ import (
 // Define database client
 var db *gorm.DB = config.ConnectDB()
 
-// Todo struct for the request HTTP body
-type todoRequest struct {
-	Name        string `json:"Name"`
-	Description string `json:"Description"`
-}
-
-// Todo struct for the HTTP response
-type todoResponse struct {
-	todoRequest
-	ID uint `json:"ID"`
-}
-
 // CreateTodo godoc
 //
 //	@Summary		Create Todo record
 //	@Description	Create Todo record
 //	@Tags			todos
 //	@Produce		json
-//	@Param			Request Body 	body		controllers.todoRequest  	true	"Request Body"
-//	@Success		200	{object}	controllers.todoResponse
+//	@Param			Request Body 	body		schemas.TodoRequest  	true	"Request Body"
+//	@Success		200	{object}	schemas.TodoResponse
 //	@Failure		400	{object}	error
 //	@Router			/todos [POST]
 //
 // Create Todo record in database
 func CreateTodo(context *gin.Context) {
-	var data todoRequest
+	var data schemas.TodoRequest
 
 	// Binding JSON request body to todoRequest struct
 	if err := context.ShouldBindJSON(&data); err != nil {
@@ -57,7 +46,7 @@ func CreateTodo(context *gin.Context) {
 
 	// Matching result to create HTTP Response
 	// response := todoResponse{ID: todo.ID, Name: todo.Name, Description: todo.Description}
-	var response todoResponse
+	var response schemas.TodoResponse
 	response.ID = todo.ID
 	response.Name = todo.Name
 	response.Description = todo.Description
@@ -104,7 +93,7 @@ func GetAllTodos(context *gin.Context) {
 //	@Tags			todos
 //	@Produce		json
 //	@Param			id	path		int	true	"Todo ID"
-//	@Success		200	{object}	controllers.todoResponse
+//	@Success		200	{object}	schemas.TodoResponse
 //	@Failure		400	{object}	error
 //	@Router			/todos/{id} [GET]
 //
@@ -124,7 +113,7 @@ func GetTodo(context *gin.Context) {
 	}
 
 	// Matching result to todoResponse
-	var response todoResponse
+	var response schemas.TodoResponse
 	response.ID = todo.ID
 	response.Name = todo.Name
 	response.Description = todo.Description
@@ -140,14 +129,14 @@ func GetTodo(context *gin.Context) {
 //	@Tags			todos
 //	@Produce		json
 //	@Param			id	path		int	true	"Todo ID"
-//	@Param			Request Body 	body		controllers.todoRequest  	true	"Request Body"
-//	@Success		200	{object}	controllers.todoResponse
+//	@Param			Request Body 	body		schemas.TodoRequest  	true	"Request Body"
+//	@Success		200	{object}	schemas.TodoResponse
 //	@Failure		400	{object}	error
 //	@Router			/todos/{id} [PUT]
 //
 // Update Todo record by ID
 func UpdateTodo(context *gin.Context) {
-	var data todoRequest
+	var data schemas.TodoRequest
 
 	// Defining HTTP request parameter to get Todo id
 	reqId := context.Param("id")
@@ -181,7 +170,7 @@ func UpdateTodo(context *gin.Context) {
 	}
 
 	// Matching result to todoResponse
-	var response todoResponse
+	var response schemas.TodoResponse
 	response.ID = todo.ID
 	response.Name = todo.Name
 	response.Description = todo.Description

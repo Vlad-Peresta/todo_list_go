@@ -1,21 +1,5 @@
 basePath: /api/v1
 definitions:
-  controllers.todoRequest:
-    properties:
-      Description:
-        type: string
-      Name:
-        type: string
-    type: object
-  controllers.todoResponse:
-    properties:
-      Description:
-        type: string
-      ID:
-        type: integer
-      Name:
-        type: string
-    type: object
   gorm.DeletedAt:
     properties:
       time:
@@ -24,9 +8,30 @@ definitions:
         description: Valid is true if Time is not NULL
         type: boolean
     type: object
-  models.Todo:
+  models.Tag:
     properties:
       createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: integer
+      name:
+        type: string
+      todos:
+        items:
+          $ref: '#/definitions/models.Todo'
+        type: array
+      updatedAt:
+        type: string
+    type: object
+  models.Todo:
+    properties:
+      active:
+        type: boolean
+      createdAt:
+        type: string
+      deadline:
         type: string
       deletedAt:
         $ref: '#/definitions/gorm.DeletedAt'
@@ -36,7 +41,29 @@ definitions:
         type: integer
       name:
         type: string
+      statusID:
+        type: integer
+      tags:
+        items:
+          $ref: '#/definitions/models.Tag'
+        type: array
       updatedAt:
+        type: string
+    type: object
+  schemas.TodoRequest:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+    type: object
+  schemas.TodoResponse:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      name:
         type: string
     type: object
 host: localhost:8080
@@ -75,14 +102,14 @@ paths:
         name: Body
         required: true
         schema:
-          $ref: '#/definitions/controllers.todoRequest'
+          $ref: '#/definitions/schemas.TodoRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controllers.todoResponse'
+            $ref: '#/definitions/schemas.TodoResponse'
         "400":
           description: Bad Request
           schema: {}
@@ -127,7 +154,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controllers.todoResponse'
+            $ref: '#/definitions/schemas.TodoResponse'
         "400":
           description: Bad Request
           schema: {}
@@ -147,14 +174,14 @@ paths:
         name: Body
         required: true
         schema:
-          $ref: '#/definitions/controllers.todoRequest'
+          $ref: '#/definitions/schemas.TodoRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controllers.todoResponse'
+            $ref: '#/definitions/schemas.TodoResponse'
         "400":
           description: Bad Request
           schema: {}
