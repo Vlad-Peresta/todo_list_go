@@ -6,10 +6,6 @@ import (
 	"gorm.io/gorm"
 )
 
-var (
-	db *gorm.DB = config.ConnectDB()
-)
-
 //	@title			Todo List API
 //	@version		1.0.0
 //	@description	API for working with the Todo List.
@@ -19,7 +15,9 @@ var (
 //	@host			localhost:8080
 //	@BasePath		/api/v1
 func main() {
-	defer config.DisconnectDB(db)
+	var DB *gorm.DB
+	config.ConnectDB()
+	defer config.DisconnectDB(DB)
 
 	// run all routes
 	routes.Routes()

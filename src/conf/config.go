@@ -10,8 +10,11 @@ import (
 	"gorm.io/gorm"
 )
 
+// Define database client
+var DB *gorm.DB
+
 // ConnectDB connects go to the database
-func ConnectDB() *gorm.DB {
+func ConnectDB() {
 	errorENV := godotenv.Load()
 	if errorENV != nil {
 		panic("Failed to load env file!")
@@ -34,7 +37,7 @@ func ConnectDB() *gorm.DB {
 		fmt.Printf("Failed to migrate: %v", err)
 	}
 
-	return db
+	DB = db
 }
 
 // DisconnectDB is stopping connection to Postgres database

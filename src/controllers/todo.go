@@ -8,11 +8,11 @@ import (
 	"github.com/Vlad-Peresta/todo_list_go/src/schemas"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cast"
-	"gorm.io/gorm"
+	// "gorm.io/gorm"
 )
 
 // Define database client
-var db *gorm.DB = config.ConnectDB()
+// var DB *gorm.DB = config.DB
 
 // CreateTodo godoc
 //
@@ -39,7 +39,7 @@ func CreateTodo(context *gin.Context) {
 	todo := models.Todo{Name: data.Name, Description: data.Description}
 
 	// Query to database
-	result := db.Create(&todo)
+	result := config.DB.Create(&todo)
 	if err := result.Error; err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err})
 	}
@@ -70,7 +70,7 @@ func GetAllTodos(context *gin.Context) {
 	var todos []models.Todo
 
 	// Query to find all todos
-	err := db.Find(&todos)
+	err := config.DB.Find(&todos)
 	if err.Error != nil {
 		context.JSON(http.StatusBadRequest, gin.H{
 			"error": "Error getting data"})
@@ -105,7 +105,7 @@ func GetTodo(context *gin.Context) {
 	todoId := cast.ToUint(context.Param("id"))
 
 	// Query to find todo
-	err := db.First(&todo, todoId)
+	err := config.DB.First(&todo, todoId)
 	if err.Error != nil {
 		context.JSON(http.StatusBadRequest, gin.H{
 			"error": "Record with provided ID does not exit"})
@@ -152,7 +152,7 @@ func UpdateTodo(context *gin.Context) {
 	todo := models.Todo{}
 
 	// Get first Todo record by id from DB
-	todoById := db.Where("id = ?", todoId).First(&todo)
+	todoById := config.DB.Where("id = ?", todoId).First(&todo)
 	if todoById.Error != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": "Todo not found"})
 		return
@@ -163,7 +163,7 @@ func UpdateTodo(context *gin.Context) {
 	todo.Description = data.Description
 
 	// Update existing Todo record
-	result := db.Save(&todo)
+	result := config.DB.Save(&todo)
 	if err := result.Error; err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err})
 		return
@@ -200,7 +200,7 @@ func DeleteTodo(context *gin.Context) {
 	todoId := cast.ToUint(reqId)
 
 	// Delete Todo record by id from DB
-	db.Where("id = ?", todoId).Unscoped().Delete(&todo)
+	config.DB.Where("id = ?", todoId).Unscoped().Delete(&todo)
 
 	// Creating HTTP response
 	context.JSON(http.StatusOK, gin.H{
