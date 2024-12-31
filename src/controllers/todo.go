@@ -3,16 +3,10 @@ package controllers
 import (
 	"net/http"
 
-	config "github.com/Vlad-Peresta/todo_list_go/src/conf"
 	"github.com/Vlad-Peresta/todo_list_go/src/models"
 	"github.com/Vlad-Peresta/todo_list_go/src/schemas"
 	"github.com/gin-gonic/gin"
-	"github.com/spf13/cast"
-	// "gorm.io/gorm"
 )
-
-// Define database client
-// var DB *gorm.DB = config.DB
 
 // CreateTodo godoc
 //
@@ -25,7 +19,7 @@ import (
 //	@Failure		400	{object}	error
 //	@Router			/todos [POST]
 //
-// Create Todo record in database
+// CreateTodo creates Todo record in the database
 func CreateTodo(context *gin.Context) {
 	var data schemas.TodoRequest
 
@@ -39,9 +33,9 @@ func CreateTodo(context *gin.Context) {
 	todo := models.Todo{Name: data.Name, Description: data.Description}
 
 	// Query to database
-	result := config.DB.Create(&todo)
-	if err := result.Error; err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err})
+	err := models.CreateRecord(&todo)
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
 
 	// Matching result to create HTTP Response
@@ -65,15 +59,15 @@ func CreateTodo(context *gin.Context) {
 //	@Failure		400	{object}	error
 //	@Router			/todos [GET]
 //
-// Getting all Todo data
+// GetAllTodos finds all Todo records
 func GetAllTodos(context *gin.Context) {
 	var todos []models.Todo
 
-	// Query to find all todos
-	err := config.DB.Find(&todos)
-	if err.Error != nil {
+	// Find all todo's records
+	err := models.GetAllRecords(&todos)
+	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{
-			"error": "Error getting data"})
+			"error": err.Error()})
 		return
 	}
 
@@ -97,18 +91,15 @@ func GetAllTodos(context *gin.Context) {
 //	@Failure		400	{object}	error
 //	@Router			/todos/{id} [GET]
 //
-// Getting Todo record by ID
+// GetTodo finds Todo record by ID
 func GetTodo(context *gin.Context) {
 	var todo models.Todo
 
-	// Get Todo id from HTTP request parameter
-	todoId := cast.ToUint(context.Param("id"))
-
-	// Query to find todo
-	err := config.DB.First(&todo, todoId)
-	if err.Error != nil {
+	// Finding todo record by id
+	err := models.GetRecordByID(&todo, context.Param("id"))
+	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{
-			"error": "Record with provided ID does not exit"})
+			"error": err.Error()})
 		return
 	}
 
@@ -134,13 +125,9 @@ func GetTodo(context *gin.Context) {
 //	@Failure		400	{object}	error
 //	@Router			/todos/{id} [PUT]
 //
-// Update Todo record by ID
+// UpdateTodo updates Todo record by ID
 func UpdateTodo(context *gin.Context) {
 	var data schemas.TodoRequest
-
-	// Defining HTTP request parameter to get Todo id
-	reqId := context.Param("id")
-	todoId := cast.ToUint(reqId)
 
 	// Binding HTTP request body to the todoRequest struct
 	if err := context.BindJSON(&data); err != nil {
@@ -151,20 +138,9 @@ func UpdateTodo(context *gin.Context) {
 	// Initiate empty Todo model's record
 	todo := models.Todo{}
 
-	// Get first Todo record by id from DB
-	todoById := config.DB.Where("id = ?", todoId).First(&todo)
-	if todoById.Error != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "Todo not found"})
-		return
-	}
-
-	// Matching todoRequest with models.Todo
-	todo.Name = data.Name
-	todo.Description = data.Description
-
-	// Update existing Todo record
-	result := config.DB.Save(&todo)
-	if err := result.Error; err != nil {
+	// // Updating Todo record by id
+	err := models.PatchUpdateRecordByID(&todo, data, context.Param("id"))
+	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err})
 		return
 	}
@@ -190,22 +166,24 @@ func UpdateTodo(context *gin.Context) {
 //	@Failure		400	{object}	error
 //	@Router			/todos/{id} [DELETE]
 //
-// Delete Todo record by ID
+// DeleteTodo deletes Todo record by ID
 func DeleteTodo(context *gin.Context) {
 	// Initiate empty Todo model's record
 	todo := models.Todo{}
-
-	// Defining HTTP request parameter to get Todo id
-	reqId := context.Param("id")
-	todoId := cast.ToUint(reqId)
+	id := context.Param("id")
 
 	// Delete Todo record by id from DB
-	config.DB.Where("id = ?", todoId).Unscoped().Delete(&todo)
+	err := models.DeleteRecordByID(&todo, id)
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error()})
+		return
+	}
 
 	// Creating HTTP response
 	context.JSON(http.StatusOK, gin.H{
 		"status":  "200",
 		"message": "Record was deleted successfully",
-		"data":    todoId,
+		"data":    id,
 	})
 }
