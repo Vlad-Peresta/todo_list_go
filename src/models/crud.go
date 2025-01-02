@@ -54,3 +54,11 @@ func DeleteRecordByID[T interface{}, I uint | string](record *T, id I) (err erro
 	}
 	return nil
 }
+
+// GetUserByUsername finds record of the given model by `Username` field
+func GetUserByUsername(record *User, username string) (err error) {
+	if err := config.DB.First(&record, "username = ?", username).Error; err != nil {
+		return errors.New("User with provided username was not found.")
+	}
+	return nil
+}

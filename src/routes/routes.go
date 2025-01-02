@@ -17,6 +17,12 @@ func Routes() {
 
 	v1 := route.Group("/api/v1")
 	{
+		auth := v1.Group("/auth")
+		{
+			auth.POST("/signup", controllers.CreateUser)
+			auth.POST("/login", controllers.Login)
+		}
+
 		todos := v1.Group("/todos")
 		{
 			todos.POST("", controllers.CreateTodo)

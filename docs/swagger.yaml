@@ -10,9 +10,9 @@ definitions:
     type: object
   models.Tag:
     properties:
-      createdAt:
+      created_at:
         type: string
-      deletedAt:
+      deleted_at:
         $ref: '#/definitions/gorm.DeletedAt'
       id:
         type: integer
@@ -22,18 +22,18 @@ definitions:
         items:
           $ref: '#/definitions/models.Todo'
         type: array
-      updatedAt:
+      updated_at:
         type: string
     type: object
   models.Todo:
     properties:
       active:
         type: boolean
-      createdAt:
+      created_at:
         type: string
       deadline:
         type: string
-      deletedAt:
+      deleted_at:
         $ref: '#/definitions/gorm.DeletedAt'
       description:
         type: string
@@ -41,14 +41,24 @@ definitions:
         type: integer
       name:
         type: string
-      statusID:
+      status_id:
         type: integer
       tags:
         items:
           $ref: '#/definitions/models.Tag'
         type: array
-      updatedAt:
+      updated_at:
         type: string
+    type: object
+  schemas.AuthInputData:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
     type: object
   schemas.TodoRequest:
     properties:
@@ -76,6 +86,52 @@ info:
   title: Todo List API
   version: 1.0.0
 paths:
+  /auth/login:
+    post:
+      description: Login User
+      parameters:
+      - description: Authentication Data
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/schemas.AuthInputData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemas.AuthInputData'
+        "400":
+          description: Bad Request
+          schema: {}
+      summary: Login User
+      tags:
+      - auth
+  /auth/signup:
+    post:
+      description: Create User record
+      parameters:
+      - description: Authentication Data
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/schemas.AuthInputData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemas.AuthInputData'
+        "400":
+          description: Bad Request
+          schema: {}
+      summary: Create User record
+      tags:
+      - auth
   /todos:
     get:
       description: Get all Todo records
