@@ -18,7 +18,7 @@ import (
 func main() {
 	config.ConnectDB()
 
-	if err := config.DB.AutoMigrate(&models.Todo{}); err != nil {
+	if err := config.DB.AutoMigrate(&models.Todo{}, &models.User{}); err != nil {
 		fmt.Printf("Failed to migrate: %v", err)
 	}
 
