@@ -50,6 +50,21 @@ definitions:
       updated_at:
         type: string
     type: object
+  models.User:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: integer
+      password:
+        type: string
+      updated_at:
+        type: string
+      username:
+        type: string
+    type: object
   schemas.AuthInputData:
     properties:
       password:
@@ -130,6 +145,29 @@ paths:
           description: Bad Request
           schema: {}
       summary: Create User record
+      tags:
+      - auth
+  /auth/user/profile:
+    get:
+      description: Get user profile
+      parameters:
+      - default: Bearer <Access token>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+          schema: {}
+      summary: Get user profile
       tags:
       - auth
   /todos:

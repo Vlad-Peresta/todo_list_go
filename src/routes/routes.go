@@ -5,6 +5,7 @@ import (
 
 	docs "github.com/Vlad-Peresta/todo_list_go/docs"
 	"github.com/Vlad-Peresta/todo_list_go/src/controllers"
+	"github.com/Vlad-Peresta/todo_list_go/src/middlewares"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -21,6 +22,7 @@ func Routes() {
 		{
 			auth.POST("/signup", controllers.CreateUser)
 			auth.POST("/login", controllers.Login)
+			auth.GET("/user/profile", middlewares.CheckAuth, controllers.GetUserProfile)
 		}
 
 		todos := v1.Group("/todos")

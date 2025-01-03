@@ -103,3 +103,23 @@ func Login(context *gin.Context) {
 
 	context.JSON(200, gin.H{"token": token})
 }
+
+// GetUserProfile godoc
+//
+//	@Summary		Get user profile
+//	@Description	Get user profile
+//	@Tags			auth
+//
+// @Param Authorization header string true "Insert your access token" default(Bearer <Access token>)
+//
+//	@Produce		json
+//	@Success		200	{object}	models.User
+//	@Failure		400	{object}	error
+//	@Router			/auth/user/profile [GET]
+//
+// GetUserProfile provides User data
+func GetUserProfile(c *gin.Context) {
+	user, _ := c.Get("CurrentUser")
+
+	c.JSON(200, gin.H{"user": user})
+}
