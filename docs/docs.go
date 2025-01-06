@@ -133,6 +133,16 @@ const docTemplate = `{
                     "todos"
                 ],
                 "summary": "Get all Todo records",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003cAccess token\u003e",
+                        "description": "Insert your access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -159,6 +169,14 @@ const docTemplate = `{
                 ],
                 "summary": "Create Todo record",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003cAccess token\u003e",
+                        "description": "Insert your access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "description": "Request Body",
                         "name": "Body",
@@ -195,6 +213,14 @@ const docTemplate = `{
                 "summary": "Get Todo record by ID",
                 "parameters": [
                     {
+                        "type": "string",
+                        "default": "Bearer \u003cAccess token\u003e",
+                        "description": "Insert your access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "type": "integer",
                         "description": "Todo ID",
                         "name": "id",
@@ -225,6 +251,14 @@ const docTemplate = `{
                 ],
                 "summary": "Update Todo record",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003cAccess token\u003e",
+                        "description": "Insert your access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "integer",
                         "description": "Todo ID",
@@ -265,6 +299,14 @@ const docTemplate = `{
                 ],
                 "summary": "Delete Todo record",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003cAccess token\u003e",
+                        "description": "Insert your access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "integer",
                         "description": "Todo ID",

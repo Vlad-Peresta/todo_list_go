@@ -26,6 +26,7 @@ func Routes() {
 		}
 
 		todos := v1.Group("/todos")
+		todos.Use(middlewares.CheckAuth)
 		{
 			todos.POST("", controllers.CreateTodo)
 			todos.GET("", controllers.GetAllTodos)

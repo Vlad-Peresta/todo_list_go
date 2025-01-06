@@ -13,6 +13,9 @@ import (
 //	@Summary		Create Todo record
 //	@Description	Create Todo record
 //	@Tags			todos
+//
+// @Param Authorization header string true "Insert your access token" default(Bearer <Access token>)
+//
 //	@Produce		json
 //	@Param			Request Body 	body		schemas.TodoRequest  	true	"Request Body"
 //	@Success		200	{object}	schemas.TodoResponse
@@ -54,6 +57,9 @@ func CreateTodo(context *gin.Context) {
 //	@Summary		Get all Todo records
 //	@Description	Get all Todo records
 //	@Tags			todos
+//
+// @Param Authorization header string true "Insert your access token" default(Bearer <Access token>)
+//
 //	@Produce		json
 //	@Success		200	{object}	[]models.Todo
 //	@Failure		400	{object}	error
@@ -85,6 +91,9 @@ func GetAllTodos(context *gin.Context) {
 //	@Summary		Get Todo record by ID
 //	@Description	Get Todo record by ID
 //	@Tags			todos
+//
+// @Param Authorization header string true "Insert your access token" default(Bearer <Access token>)
+//
 //	@Produce		json
 //	@Param			id	path		int	true	"Todo ID"
 //	@Success		200	{object}	schemas.TodoResponse
@@ -118,6 +127,9 @@ func GetTodo(context *gin.Context) {
 //	@Summary		Update Todo record
 //	@Description	Update Todo record
 //	@Tags			todos
+//
+// @Param Authorization header string true "Insert your access token" default(Bearer <Access token>)
+//
 //	@Produce		json
 //	@Param			id	path		int	true	"Todo ID"
 //	@Param			Request Body 	body		schemas.TodoRequest  	true	"Request Body"
@@ -160,6 +172,9 @@ func UpdateTodo(context *gin.Context) {
 //	@Summary		Delete Todo record
 //	@Description	Delete Todo record
 //	@Tags			todos
+//
+// @Param Authorization header string true "Insert your access token" default(Bearer <Access token>)
+//
 //	@Produce		json
 //	@Param			id	path		int	true	"Todo ID"
 //	@Success		200	{object}	[]models.Todo

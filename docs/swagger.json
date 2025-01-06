@@ -127,6 +127,16 @@
                     "todos"
                 ],
                 "summary": "Get all Todo records",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003cAccess token\u003e",
+                        "description": "Insert your access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -153,6 +163,14 @@
                 ],
                 "summary": "Create Todo record",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003cAccess token\u003e",
+                        "description": "Insert your access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "description": "Request Body",
                         "name": "Body",
@@ -189,6 +207,14 @@
                 "summary": "Get Todo record by ID",
                 "parameters": [
                     {
+                        "type": "string",
+                        "default": "Bearer \u003cAccess token\u003e",
+                        "description": "Insert your access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "type": "integer",
                         "description": "Todo ID",
                         "name": "id",
@@ -219,6 +245,14 @@
                 ],
                 "summary": "Update Todo record",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003cAccess token\u003e",
+                        "description": "Insert your access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "integer",
                         "description": "Todo ID",
@@ -259,6 +293,14 @@
                 ],
                 "summary": "Delete Todo record",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003cAccess token\u003e",
+                        "description": "Insert your access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "integer",
                         "description": "Todo ID",
