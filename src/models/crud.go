@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	config "github.com/Vlad-Peresta/todo_list_go/src/conf"
+	"github.com/Vlad-Peresta/todo_list_go/src/schemas"
 )
 
 // GetAllRecords finds all records of the given model
@@ -30,13 +31,20 @@ func CreateRecord[T interface{}](record T) (err error) {
 	return nil
 }
 
-// PatchUpdateRecordByID updates record of the given model with provided data
-func PatchUpdateRecordByID[T interface{}, D interface{}, I uint | string](record *T, data D, id I) (err error) {
-	recordID := config.DB.First(&record, "id = ?", id)
+// PatchUpdateTodoByID updates todo record with provided data
+func PatchUpdateTodoByID[I uint | string](todo *Todo, data schemas.TodoRequest, id I) (err error) {
+	recordID := config.DB.First(&todo, "id = ?", id)
 	if recordID.Error != nil {
-		return errors.New("Record with provided ID was not found.")
+		return errors.New("Todo record with provided ID was not found.")
 	}
-	if err := config.DB.Model(&record).Updates(data).Error; err != nil {
+	if err := config.DB.Model(&todo).Updates(map[string]interface{}{
+		"name":        data.Name,
+		"description": data.Description,
+		"deadline":    data.Deadline,
+		"active":      data.Active,
+		"status_id":   data.StatusID,
+		"user_id":     data.UserID,
+	}).Error; err != nil {
 		return err
 	}
 	return nil

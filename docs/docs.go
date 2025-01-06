@@ -232,7 +232,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/schemas.TodoResponse"
+                            "$ref": "#/definitions/models.Todo"
                         }
                     },
                     "400": {
@@ -280,7 +280,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/schemas.TodoResponse"
+                            "$ref": "#/definitions/models.Todo"
                         }
                     },
                     "400": {
@@ -407,6 +407,9 @@ const docTemplate = `{
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -424,6 +427,12 @@ const docTemplate = `{
                 },
                 "password": {
                     "type": "string"
+                },
+                "todos": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Todo"
+                    }
                 },
                 "updated_at": {
                     "type": "string"
@@ -450,18 +459,44 @@ const docTemplate = `{
         },
         "schemas.TodoRequest": {
             "type": "object",
+            "required": [
+                "name",
+                "user_id"
+            ],
             "properties": {
+                "active": {
+                    "type": "boolean"
+                },
+                "deadline": {
+                    "type": "string"
+                },
                 "description": {
                     "type": "string"
                 },
                 "name": {
                     "type": "string"
+                },
+                "status_id": {
+                    "type": "integer"
+                },
+                "user_id": {
+                    "type": "integer"
                 }
             }
         },
         "schemas.TodoResponse": {
             "type": "object",
+            "required": [
+                "name",
+                "user_id"
+            ],
             "properties": {
+                "active": {
+                    "type": "boolean"
+                },
+                "deadline": {
+                    "type": "string"
+                },
                 "description": {
                     "type": "string"
                 },
@@ -470,6 +505,12 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
+                },
+                "status_id": {
+                    "type": "integer"
+                },
+                "user_id": {
+                    "type": "integer"
                 }
             }
         }

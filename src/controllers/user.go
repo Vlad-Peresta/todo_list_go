@@ -35,7 +35,10 @@ func CreateUser(context *gin.Context) {
 	}
 
 	// Finding User record with provided Username
-	models.GetUserByUsername(&user, authData.Username)
+	if err := models.GetUserByUsername(&user, authData.Username); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 	if user.ID != 0 {
 		context.JSON(http.StatusBadRequest, gin.H{"error": "User with provided Username is already used."})
 		return

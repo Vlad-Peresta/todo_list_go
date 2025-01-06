@@ -6,6 +6,7 @@ import (
 	"github.com/Vlad-Peresta/todo_list_go/src/models"
 	"github.com/Vlad-Peresta/todo_list_go/src/schemas"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 )
 
 // CreateTodo godoc
@@ -24,16 +25,13 @@ import (
 //
 // CreateTodo creates Todo record in the database
 func CreateTodo(context *gin.Context) {
-	var data schemas.TodoRequest
+	var todo models.Todo
 
-	// Binding JSON request body to todoRequest struct
-	if err := context.ShouldBindJSON(&data); err != nil {
+	// Binding JSON request body to todo struct
+	if err := context.ShouldBindBodyWith(&todo, binding.JSON); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
-	// Matching Todo models struct to todoRequest struct
-	todo := models.Todo{Name: data.Name, Description: data.Description}
 
 	// Query to database
 	err := models.CreateRecord(&todo)
@@ -42,11 +40,12 @@ func CreateTodo(context *gin.Context) {
 	}
 
 	// Matching result to create HTTP Response
-	// response := todoResponse{ID: todo.ID, Name: todo.Name, Description: todo.Description}
-	var response schemas.TodoResponse
+	response := schemas.TodoResponse{}
+	if err := context.ShouldBindBodyWith(&response, binding.JSON); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 	response.ID = todo.ID
-	response.Name = todo.Name
-	response.Description = todo.Description
 
 	// Create HTTP response
 	context.JSON(http.StatusCreated, response)
@@ -72,8 +71,7 @@ func GetAllTodos(context *gin.Context) {
 	// Find all todo's records
 	err := models.GetAllRecords(&todos)
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error()})
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -96,7 +94,7 @@ func GetAllTodos(context *gin.Context) {
 //
 //	@Produce		json
 //	@Param			id	path		int	true	"Todo ID"
-//	@Success		200	{object}	schemas.TodoResponse
+//	@Success		200	{object}	models.Todo
 //	@Failure		400	{object}	error
 //	@Router			/todos/{id} [GET]
 //
@@ -107,19 +105,12 @@ func GetTodo(context *gin.Context) {
 	// Finding todo record by id
 	err := models.GetRecordByID(&todo, context.Param("id"))
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error()})
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	// Matching result to todoResponse
-	var response schemas.TodoResponse
-	response.ID = todo.ID
-	response.Name = todo.Name
-	response.Description = todo.Description
-
 	// Creating HTTP response
-	context.JSON(http.StatusCreated, response)
+	context.JSON(http.StatusCreated, todo)
 }
 
 // UpdateTodo godoc
@@ -133,7 +124,7 @@ func GetTodo(context *gin.Context) {
 //	@Produce		json
 //	@Param			id	path		int	true	"Todo ID"
 //	@Param			Request Body 	body		schemas.TodoRequest  	true	"Request Body"
-//	@Success		200	{object}	schemas.TodoResponse
+//	@Success		200	{object}	models.Todo
 //	@Failure		400	{object}	error
 //	@Router			/todos/{id} [PUT]
 //
@@ -151,20 +142,14 @@ func UpdateTodo(context *gin.Context) {
 	todo := models.Todo{}
 
 	// // Updating Todo record by id
-	err := models.PatchUpdateRecordByID(&todo, data, context.Param("id"))
+	err := models.PatchUpdateTodoByID(&todo, data, context.Param("id"))
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err})
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	// Matching result to todoResponse
-	var response schemas.TodoResponse
-	response.ID = todo.ID
-	response.Name = todo.Name
-	response.Description = todo.Description
-
 	// Creating HTTP response
-	context.JSON(http.StatusCreated, response)
+	context.JSON(http.StatusCreated, todo)
 }
 
 // DeleteTodo godoc

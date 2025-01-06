@@ -49,6 +49,8 @@ definitions:
         type: array
       updated_at:
         type: string
+      user_id:
+        type: integer
     type: object
   models.User:
     properties:
@@ -60,6 +62,10 @@ definitions:
         type: integer
       password:
         type: string
+      todos:
+        items:
+          $ref: '#/definitions/models.Todo'
+        type: array
       updated_at:
         type: string
       username:
@@ -77,19 +83,41 @@ definitions:
     type: object
   schemas.TodoRequest:
     properties:
+      active:
+        type: boolean
+      deadline:
+        type: string
       description:
         type: string
       name:
         type: string
+      status_id:
+        type: integer
+      user_id:
+        type: integer
+    required:
+    - name
+    - user_id
     type: object
   schemas.TodoResponse:
     properties:
+      active:
+        type: boolean
+      deadline:
+        type: string
       description:
         type: string
       id:
         type: integer
       name:
         type: string
+      status_id:
+        type: integer
+      user_id:
+        type: integer
+    required:
+    - name
+    - user_id
     type: object
 host: localhost:8080
 info:
@@ -273,7 +301,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/schemas.TodoResponse'
+            $ref: '#/definitions/models.Todo'
         "400":
           description: Bad Request
           schema: {}
@@ -306,7 +334,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/schemas.TodoResponse'
+            $ref: '#/definitions/models.Todo'
         "400":
           description: Bad Request
           schema: {}

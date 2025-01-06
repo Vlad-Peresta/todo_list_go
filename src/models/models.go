@@ -20,8 +20,9 @@ type Todo struct {
 	Description string    `json:"description"`
 	Deadline    time.Time `json:"deadline"`
 	Active      bool      `gorm:"default:true" json:"active"`
-	Tags        []*Tag    `gorm:"many2many:todo_tags"`
+	Tags        []*Tag    `gorm:"many2many:todo_tags" json:"tags"`
 	StatusID    uint      `json:"status_id"`
+	UserID      uint      `json:"user_id"`
 }
 
 // Define Status database table
@@ -43,4 +44,5 @@ type User struct {
 	BaseModel
 	Username string `json:"username" gorm:"unique"`
 	Password string `json:"password"`
+	Todos    []Todo
 }
