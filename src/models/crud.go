@@ -18,7 +18,7 @@ func GetAllRecords[T interface{}](records *[]T) (err error) {
 // GetRecordByID finds records of the given model by ID
 func GetRecordByID[T interface{}, I uint | string](record *T, id I) (err error) {
 	if err := config.DB.First(&record, "id = ?", id).Error; err != nil {
-		return errors.New("Record with provided ID was not found.")
+		return errors.New("record with provided ID was not found")
 	}
 	return nil
 }
@@ -35,7 +35,7 @@ func CreateRecord[T interface{}](record T) (err error) {
 func PatchUpdateTodoByID[I uint | string](todo *Todo, data schemas.TodoRequest, id I) (err error) {
 	recordID := config.DB.First(&todo, "id = ?", id)
 	if recordID.Error != nil {
-		return errors.New("Todo record with provided ID was not found.")
+		return errors.New("todo record with provided ID was not found")
 	}
 	if err := config.DB.Model(&todo).Updates(map[string]interface{}{
 		"name":        data.Name,
@@ -54,7 +54,7 @@ func PatchUpdateTodoByID[I uint | string](todo *Todo, data schemas.TodoRequest, 
 func DeleteRecordByID[T interface{}, I uint | string](record *T, id I) (err error) {
 	recordID := config.DB.First(&record, "id = ?", id)
 	if recordID.Error != nil {
-		return errors.New("Record with provided ID was not found.")
+		return errors.New("record with provided ID was not found")
 	}
 
 	if err := config.DB.Unscoped().Delete(&record).Error; err != nil {
@@ -66,7 +66,7 @@ func DeleteRecordByID[T interface{}, I uint | string](record *T, id I) (err erro
 // GetUserByUsername finds record of the given model by `Username` field
 func GetUserByUsername(record *User, username string) (err error) {
 	if err := config.DB.First(&record, "username = ?", username).Error; err != nil {
-		return errors.New("User with provided username was not found.")
+		return errors.New("user with provided username was not found")
 	}
 	return nil
 }

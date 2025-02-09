@@ -183,7 +183,7 @@ func DeleteTodo(context *gin.Context) {
 	// Creating HTTP response
 	context.JSON(http.StatusOK, gin.H{
 		"status":  "200",
-		"message": "Record was deleted successfully",
+		"message": "record was deleted successfully",
 		"data":    id,
 	})
 }

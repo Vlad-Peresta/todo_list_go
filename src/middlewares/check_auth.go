@@ -16,14 +16,14 @@ import (
 func CheckAuth(context *gin.Context) {
 	authHeader := context.GetHeader("Authorization")
 	if authHeader == "" {
-		context.JSON(http.StatusUnauthorized, gin.H{"error": "Authorization header is missing."})
+		context.JSON(http.StatusUnauthorized, gin.H{"error": "authorization header is missing"})
 		context.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
 
 	authToken := strings.Split(authHeader, " ")
 	if len(authToken) != 2 || authToken[0] != "Bearer" {
-		context.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid access token format."})
+		context.JSON(http.StatusUnauthorized, gin.H{"error": "invalid access token format"})
 		context.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
@@ -31,23 +31,23 @@ func CheckAuth(context *gin.Context) {
 	tokenString := authToken[1]
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
 		return []byte(os.Getenv("JWT_SECRET_KEY")), nil
 	})
 	if err != nil || !token.Valid {
-		context.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid or expired token."})
+		context.JSON(http.StatusUnauthorized, gin.H{"error": "invalid or expired token"})
 		context.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		context.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
+		context.JSON(http.StatusUnauthorized, gin.H{"error": "invalid token"})
 		context.Abort()
 		return
 	}
 	if float64(time.Now().Unix()) > claims["exp"].(float64) {
-		context.JSON(http.StatusUnauthorized, gin.H{"error": "Token expired."})
+		context.JSON(http.StatusUnauthorized, gin.H{"error": "token expired"})
 		context.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}

@@ -40,7 +40,7 @@ func CreateUser(context *gin.Context) {
 		return
 	}
 	if user.ID != 0 {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "User with provided Username is already used."})
+		context.JSON(http.StatusBadRequest, gin.H{"error": "user with provided Username is already used"})
 		return
 	}
 
@@ -89,7 +89,7 @@ func Login(context *gin.Context) {
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(authData.Password)); err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid password."})
+		context.JSON(http.StatusBadRequest, gin.H{"error": "invalid password"})
 		return
 	}
 
@@ -100,7 +100,7 @@ func Login(context *gin.Context) {
 
 	token, err := generatedToken.SignedString([]byte(os.Getenv("JWT_SECRET_KEY")))
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "Failed to generate token."})
+		context.JSON(http.StatusBadRequest, gin.H{"error": "failed to generate token"})
 		return
 	}
 

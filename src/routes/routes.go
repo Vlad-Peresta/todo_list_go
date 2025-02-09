@@ -39,7 +39,7 @@ func Routes() {
 
 	// Run route whenever triggered
 	if err := route.Run(); err != nil {
-		fmt.Printf("Failed to start the server: %s", err)
+		fmt.Printf("failed to start the server: %s", err)
 		return
 	}
 }

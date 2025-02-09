@@ -16,7 +16,7 @@ var DB *gorm.DB
 func ConnectDB() {
 	errorENV := godotenv.Load()
 	if errorENV != nil {
-		panic("Failed to load env file!")
+		panic("failed to load env file")
 	}
 
 	dbUser := os.Getenv("DB_USER")
@@ -29,7 +29,7 @@ func ConnectDB() {
 		dbHost, dbUser, dbPass, dbName)
 	db, errorDB := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if errorDB != nil {
-		panic("Failed to connect Postgres database")
+		panic("failed to connect Postgres database")
 	}
 
 	DB = db
@@ -39,7 +39,7 @@ func ConnectDB() {
 func DisconnectDB(db *gorm.DB) {
 	dbSQL, err := db.DB()
 	if err != nil {
-		panic("Failed to kill connection from database")
+		panic("failed to kill connection from database")
 	}
 	dbSQL.Close()
 }
