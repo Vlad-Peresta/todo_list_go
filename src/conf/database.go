@@ -19,17 +19,18 @@ func ConnectDB() {
 		panic("failed to load env file")
 	}
 
-	dbUser := os.Getenv("DB_USER")
-	dbPass := os.Getenv("DB_PASS")
+	dbUser := os.Getenv("POSTGRES_USER")
+	dbPass := os.Getenv("POSTGRES_PASSWORD")
 	dbHost := os.Getenv("DB_HOST")
-	dbName := os.Getenv("DB_NAME")
+	dbName := os.Getenv("POSTGRES_DB")
+	dbPort := os.Getenv("DB_PORT_INTERNAL")
 
 	dsn := fmt.Sprintf(
-		"host=%s user=%s password=%s dbname=%s port=5432 sslmode=disable TimeZone=Europe/Kyiv",
-		dbHost, dbUser, dbPass, dbName)
+		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Europe/Kyiv",
+		dbHost, dbUser, dbPass, dbName, dbPort)
 	db, errorDB := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if errorDB != nil {
-		panic("failed to connect Postgres database")
+		panic(errorDB)
 	}
 
 	DB = db
