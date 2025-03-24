@@ -14,8 +14,8 @@ var DB *gorm.DB
 
 // ConnectDB connects go to the database
 func ConnectDB() {
-	errorENV := godotenv.Load()
-	if errorENV != nil {
+	err := godotenv.Load()
+	if err != nil {
 		panic("failed to load env file")
 	}
 
@@ -28,9 +28,9 @@ func ConnectDB() {
 	dsn := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Europe/Kyiv",
 		dbHost, dbUser, dbPass, dbName, dbPort)
-	db, errorDB := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if errorDB != nil {
-		panic(errorDB)
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		panic(err)
 	}
 
 	DB = db
@@ -42,5 +42,5 @@ func DisconnectDB(db *gorm.DB) {
 	if err != nil {
 		panic("failed to kill connection from database")
 	}
-	dbSQL.Close()
+	defer dbSQL.Close()
 }
