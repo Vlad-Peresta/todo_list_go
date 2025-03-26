@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+	"math"
 	"time"
 
 	"gorm.io/gorm"
@@ -24,11 +25,56 @@ type BaseModel struct {
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 }
 
+type Pagination struct {
+	Limit        int    `json:"limit,omitempty" form:"limit"`
+	Page         int    `json:"page,omitempty" form:"page"`
+	Sort         string `json:"sort,omitempty" form:"sort"`
+	TotalRecords int64  `json:"total_records"`
+	TotalPages   int    `json:"total_pages"`
+	Data         any    `json:"data"`
+}
+
+func (p *Pagination) GetPaginatedAndSortedRecords() func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		return db.Offset(p.getOffset()).Limit(p.getLimit()).Order(p.getSort())
+	}
+}
+
+func (p *Pagination) getPage() int {
+	if p.Page == 0 {
+		return 1
+	}
+	return p.Page
+}
+
+func (p *Pagination) getSort() string {
+	if p.Sort == "" {
+		return "id DESC"
+	}
+	return p.Sort
+}
+
+func (p *Pagination) getOffset() int {
+	return (p.getPage() - 1) * p.Limit
+}
+
+func (p *Pagination) getLimit() int {
+	if p.Limit == 0 {
+		return 100
+	}
+	return p.Limit
+}
+
 // GetAllRecords finds all records of the given model
-func GetAllRecords[M Model](records *[]M) (err error) {
-	if err := config.DB.Find(&records).Error; err != nil {
+func GetAllRecords[M Model](records *[]M, pagination *Pagination) (err error) {
+	var totalRecords int64
+	if err := config.DB.Scopes(pagination.GetPaginatedAndSortedRecords()).Find(&records).Error; err != nil {
 		return err
 	}
+	config.DB.Model(&records).Count(&totalRecords)
+	pagination.TotalRecords = totalRecords
+	pagination.TotalPages = int(math.Ceil(float64(totalRecords) / float64(pagination.getLimit())))
+	pagination.Data = records
 	return nil
 }
 

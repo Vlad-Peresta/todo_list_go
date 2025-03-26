@@ -58,6 +58,9 @@ func CreateTodo(context *gin.Context) {
 //	@Tags			todos
 //
 // @Param Authorization header string true "Insert your access token" default(Bearer <Access token>)
+// @Param        sort    query     string  false  "Sorting parameter"  default(id DESC)
+// @Param        limit    query     string  false  "Records per page" default(100)
+// @Param        page    query     string  false  "Current page" default(1)
 //
 //	@Produce		json
 //	@Success		200	{object}	[]models.Todo
@@ -67,9 +70,15 @@ func CreateTodo(context *gin.Context) {
 // GetAllTodos finds all Todo records
 func GetAllTodos(context *gin.Context) {
 	var todos []models.Todo
+	var pagination models.Pagination
+
+	if err := context.ShouldBindQuery(&pagination); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	// Find all todo's records
-	err := models.GetAllRecords(&todos)
+	err := models.GetAllRecords(&todos, &pagination)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

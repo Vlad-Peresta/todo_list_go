@@ -208,6 +208,21 @@ paths:
         name: Authorization
         required: true
         type: string
+      - default: id DESC
+        description: Sorting parameter
+        in: query
+        name: sort
+        type: string
+      - default: "100"
+        description: Records per page
+        in: query
+        name: limit
+        type: string
+      - default: "1"
+        description: Current page
+        in: query
+        name: page
+        type: string
       produces:
       - application/json
       responses:

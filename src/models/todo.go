@@ -26,7 +26,7 @@ func PatchUpdateTodoByID[I uint | string](todo *Todo, data schemas.TodoRequest, 
 	if recordID.Error != nil {
 		return errors.New("todo record with provided ID was not found")
 	}
-	if err := config.DB.Model(&todo).Updates(map[string]interface{}{
+	if err := config.DB.Model(&todo).Updates(map[string]any {
 		"name":        data.Name,
 		"description": data.Description,
 		"deadline":    data.Deadline,
