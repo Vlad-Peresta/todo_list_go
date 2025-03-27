@@ -35,7 +35,7 @@ func Routes() {
 			todos.DELETE(":id", controllers.DeleteTodo)
 		}
 	}
-	route.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	v1.GET("/docs/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Run route whenever triggered
 	if err := route.Run(); err != nil {

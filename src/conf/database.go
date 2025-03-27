@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -16,7 +17,7 @@ var DB *gorm.DB
 func ConnectDB() {
 	err := godotenv.Load()
 	if err != nil {
-		panic("failed to load env file")
+		log.Println("failed to load env file")
 	}
 
 	dbUser := os.Getenv("POSTGRES_USER")
