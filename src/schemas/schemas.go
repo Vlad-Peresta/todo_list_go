@@ -9,7 +9,7 @@ type TodoRequest struct {
 	Deadline    time.Time `json:"deadline"`
 	Active      bool      `json:"active"`
 	StatusID    uint      `json:"status_id"`
-	UserID      uint      `json:"user_id" binding:"required"`
+	UserID      uint      `json:"user_id"`
 }
 
 // Todo struct for the HTTP response

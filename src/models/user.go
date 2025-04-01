@@ -12,7 +12,6 @@ type User struct {
 	BaseModel
 	Username string `json:"username" gorm:"unique"`
 	Password string `json:"password"`
-	Todos    []Todo
 }
 
 // GetUserByUsername finds record of the given model by `Username` field
