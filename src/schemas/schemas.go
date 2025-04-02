@@ -2,9 +2,15 @@ package schemas
 
 import "time"
 
+type Response struct {
+	Status  string `json:"status"`
+	Message string `json:"message"`
+	Data    any    `json:"data"`
+}
+
 // Todo struct for the request HTTP body
 type TodoRequest struct {
-	Name        string    `json:"name" binding:"required"`
+	Name        string    `json:"name"`
 	Description string    `json:"description"`
 	Deadline    time.Time `json:"deadline"`
 	Active      bool      `json:"active"`

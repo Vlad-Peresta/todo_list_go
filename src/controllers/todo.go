@@ -19,8 +19,8 @@ import (
 //
 //	@Produce		json
 //	@Param			Request Body 	body		schemas.TodoRequest  	true	"Request Body"
-//	@Success		200	{object}	schemas.TodoResponse
-//	@Failure		400	{object}	error
+//	@Success		200	{object}	schemas.Response
+//	@Failure		400	{object}	schemas.Response
 //	@Router			/todos [POST]
 //
 // CreateTodo creates Todo record in the database
@@ -29,26 +29,26 @@ func CreateTodo(context *gin.Context) {
 
 	// Binding JSON request body to todo struct
 	if err := context.ShouldBindBodyWith(&todo, binding.JSON); err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		context.JSON(http.StatusBadRequest, schemas.Response{Status: "error", Message: err.Error()})
 		return
 	}
 
 	// Query to database
 	err := models.CreateRecord(&todo)
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		context.JSON(http.StatusBadRequest, schemas.Response{Status: "error", Message: err.Error()})
 	}
 
 	// Matching result to create HTTP Response
 	response := schemas.TodoResponse{}
 	if err := context.ShouldBindBodyWith(&response, binding.JSON); err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		context.JSON(http.StatusBadRequest, schemas.Response{Status: "error", Message: err.Error()})
 		return
 	}
 	response.ID = todo.ID
 
 	// Create HTTP response
-	context.JSON(http.StatusCreated, response)
+	context.JSON(http.StatusCreated, schemas.Response{Status: "success", Data: response})
 }
 
 // GetAllTodos godoc
@@ -63,8 +63,8 @@ func CreateTodo(context *gin.Context) {
 // @Param        page    query     string  false  "Current page" default(1)
 //
 //	@Produce		json
-//	@Success		200	{object}	[]models.Todo
-//	@Failure		400	{object}	error
+//	@Success		200	{object}	schemas.Response
+//	@Failure		400	{object}	schemas.Response
 //	@Router			/todos [GET]
 //
 // GetAllTodos finds all Todo records
@@ -73,24 +73,19 @@ func GetAllTodos(context *gin.Context) {
 	var pagination models.Pagination
 
 	if err := context.ShouldBindQuery(&pagination); err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		context.JSON(http.StatusBadRequest, schemas.Response{Status: "error", Message: err.Error()})
 		return
 	}
 
 	// Find all todo's records
 	err := models.GetAllRecords(&todos, &pagination)
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		context.JSON(http.StatusBadRequest, schemas.Response{Status: "error", Message: err.Error()})
 		return
 	}
 
 	// Creating HTTP response
-	context.JSON(
-		http.StatusOK, gin.H{
-			"status":  "200",
-			"message": "Success",
-			"data":    todos,
-		})
+	context.JSON(http.StatusBadRequest, schemas.Response{Status: "success", Data: todos})
 }
 
 // GetTodo godoc
@@ -103,8 +98,8 @@ func GetAllTodos(context *gin.Context) {
 //
 //	@Produce		json
 //	@Param			id	path		int	true	"Todo ID"
-//	@Success		200	{object}	models.Todo
-//	@Failure		400	{object}	error
+//	@Success		200	{object}	schemas.Response
+//	@Failure		400	{object}	schemas.Response
 //	@Router			/todos/{id} [GET]
 //
 // GetTodo finds Todo record by ID
@@ -114,12 +109,12 @@ func GetTodo(context *gin.Context) {
 	// Finding todo record by id
 	err := models.GetRecordByID(&todo, context.Param("id"))
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		context.JSON(http.StatusBadRequest, schemas.Response{Status: "error", Message: err.Error()})
 		return
 	}
 
 	// Creating HTTP response
-	context.JSON(http.StatusCreated, todo)
+	context.JSON(http.StatusCreated, schemas.Response{Status: "success", Data: todo})
 }
 
 // UpdateTodo godoc
@@ -133,8 +128,8 @@ func GetTodo(context *gin.Context) {
 //	@Produce		json
 //	@Param			id	path		int	true	"Todo ID"
 //	@Param			Request Body 	body		schemas.TodoRequest  	true	"Request Body"
-//	@Success		200	{object}	models.Todo
-//	@Failure		400	{object}	error
+//	@Success		200	{object}	schemas.Response
+//	@Failure		400	{object}	schemas.Response
 //	@Router			/todos/{id} [PUT]
 //
 // UpdateTodo updates Todo record by ID
@@ -143,7 +138,7 @@ func UpdateTodo(context *gin.Context) {
 
 	// Binding HTTP request body to the todoRequest struct
 	if err := context.BindJSON(&data); err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		context.JSON(http.StatusBadRequest, schemas.Response{Status: "error", Message: err.Error()})
 		return
 	}
 
@@ -153,12 +148,12 @@ func UpdateTodo(context *gin.Context) {
 	// // Updating Todo record by id
 	err := models.PatchUpdateTodoByID(&todo, data, context.Param("id"))
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		context.JSON(http.StatusBadRequest, schemas.Response{Status: "error", Message: err.Error()})
 		return
 	}
 
 	// Creating HTTP response
-	context.JSON(http.StatusCreated, todo)
+	context.JSON(http.StatusCreated, schemas.Response{Status: "success", Data: todo})
 }
 
 // DeleteTodo godoc
@@ -171,8 +166,8 @@ func UpdateTodo(context *gin.Context) {
 //
 //	@Produce		json
 //	@Param			id	path		int	true	"Todo ID"
-//	@Success		200	{object}	[]models.Todo
-//	@Failure		400	{object}	error
+//	@Success		200	{object}	schemas.Response
+//	@Failure		400	{object}	schemas.Response
 //	@Router			/todos/{id} [DELETE]
 //
 // DeleteTodo deletes Todo record by ID
@@ -184,15 +179,10 @@ func DeleteTodo(context *gin.Context) {
 	// Delete Todo record by id from DB
 	err := models.DeleteRecordByID(&todo, id)
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error()})
+		context.JSON(http.StatusBadRequest, schemas.Response{Status: "error", Message: err.Error()})
 		return
 	}
 
 	// Creating HTTP response
-	context.JSON(http.StatusOK, gin.H{
-		"status":  "200",
-		"message": "record was deleted successfully",
-		"data":    id,
-	})
+	context.JSON(http.StatusOK, schemas.Response{Status: "success", Message: "record was deleted successfully", Data: id})
 }
