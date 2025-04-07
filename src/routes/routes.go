@@ -30,9 +30,19 @@ func Routes() {
 		{
 			todos.POST("", controllers.CreateTodo)
 			todos.GET("", controllers.GetAllTodos)
-			todos.GET(":id", controllers.GetTodo)
-			todos.PUT(":id", controllers.UpdateTodo)
-			todos.DELETE(":id", controllers.DeleteTodo)
+			todos.GET("/:id", controllers.GetTodo)
+			todos.PUT("/:id", controllers.UpdateTodo)
+			todos.DELETE("/:id", controllers.DeleteTodo)
+		}
+
+		tags := v1.Group("/tags")
+		tags.Use(middlewares.CheckAuth)
+		{
+			tags.POST("", controllers.CreateTag)
+			tags.GET("", controllers.GetAllTags)
+			tags.GET("/:id", controllers.GetTag)
+			tags.PUT("/:id", controllers.UpdateTag)
+			tags.DELETE("/:id", controllers.DeleteTag)
 		}
 	}
 	v1.GET("/docs/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

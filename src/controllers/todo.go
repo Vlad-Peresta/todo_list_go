@@ -85,7 +85,7 @@ func GetAllTodos(context *gin.Context) {
 	}
 
 	// Creating HTTP response
-	context.JSON(http.StatusBadRequest, schemas.Response{Status: "success", Data: todos})
+	context.JSON(http.StatusOK, schemas.Response{Status: "success", Data: todos})
 }
 
 // GetTodo godoc
@@ -107,14 +107,13 @@ func GetTodo(context *gin.Context) {
 	var todo models.Todo
 
 	// Finding todo record by id
-	err := models.GetRecordByID(&todo, context.Param("id"))
-	if err != nil {
+	if err := models.GetRecordByID(&todo, context.Param("id")); err != nil {
 		context.JSON(http.StatusBadRequest, schemas.Response{Status: "error", Message: err.Error()})
 		return
 	}
 
 	// Creating HTTP response
-	context.JSON(http.StatusCreated, schemas.Response{Status: "success", Data: todo})
+	context.JSON(http.StatusOK, schemas.Response{Status: "success", Data: todo})
 }
 
 // UpdateTodo godoc
@@ -153,7 +152,7 @@ func UpdateTodo(context *gin.Context) {
 	}
 
 	// Creating HTTP response
-	context.JSON(http.StatusCreated, schemas.Response{Status: "success", Data: todo})
+	context.JSON(http.StatusOK, schemas.Response{Status: "success", Data: todo})
 }
 
 // DeleteTodo godoc

@@ -104,7 +104,7 @@ func Login(context *gin.Context) {
 		return
 	}
 
-	context.JSON(200, schemas.Response{Status: "success", Data: token})
+	context.JSON(http.StatusOK, schemas.Response{Status: "success", Data: token})
 }
 
 // GetUserProfile godoc
@@ -124,5 +124,5 @@ func Login(context *gin.Context) {
 func GetUserProfile(c *gin.Context) {
 	user, _ := c.Get("CurrentUser")
 
-	c.JSON(200, schemas.Response{Status: "success", Data: user})
+	c.JSON(http.StatusOK, schemas.Response{Status: "success", Data: user})
 }

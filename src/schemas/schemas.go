@@ -15,6 +15,7 @@ type TodoRequest struct {
 	Deadline    time.Time `json:"deadline"`
 	Active      bool      `json:"active"`
 	StatusID    uint      `json:"status_id"`
+	// Tags        []uint  `json:"tags"`
 	UserID      uint      `json:"user_id"`
 }
 
@@ -27,4 +28,13 @@ type TodoResponse struct {
 type AuthInputData struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
+}
+
+type TagRequest struct {
+	Name string `json:"name"`
+}
+
+type TagResponse struct {
+	TagRequest
+	ID uint `json:"id"`
 }
